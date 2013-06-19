@@ -1,9 +1,10 @@
 {
 	"name": "Clock Icon",
-	"version": "1.0",
+	"version": "1.1",
+    "manifest_version": 2,
 	"description": "Shows the time (hours and minutes) next to the omnibox.",
 	"icons": { "128": "icon128.png" },
-	"background_page": "background.html",
+	"background": { "scripts": ["background.js"] },
 	"browser_action": {
 		"default_icon": "icon128.png",
 		"default_title": "dd/mm/yyyy hh:mm"
