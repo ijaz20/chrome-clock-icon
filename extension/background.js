@@ -1,4 +1,3 @@
-chrome.browserAction.setBadgeBackgroundColor({"color": [0,0,0,255]});
 
 function pad(s, n) {
     s = '' + s;
@@ -11,18 +10,30 @@ function pad(s, n) {
 function updateTime() {
     dateobj = new Date();
 
-    year = pad(dateobj.getFullYear(), 4);
-    month = pad(dateobj.getMonth(), 2);
-    day = pad(dateobj.getDate(), 2);
-    hour = pad(dateobj.getHours(), 2);
     minute = pad(dateobj.getMinutes(), 2);
+    seconds = pad(dateobj.getSeconds(), 2);
 
-    badge = hour + ':' + minute;
-    title = day + '/' + month + '/' + year + ' ' + badge;
+    badge = minute + ':' + seconds;
+    title = badge;
     chrome.browserAction.setBadgeText({"text": badge});
     chrome.browserAction.setTitle({"title": title});
-
-    var t = setTimeout("updateTime()", 10000);
+    chrome.tabs.query({}, function(tabs) {
+        tabs.forEach((tab) => {
+            if(tab.url == "") {
+                chrome.tabs.executeScript(tab.id, {
+                    code:"var x = document.getElementById('on_demand_table_body').getElementsByTagName('a').length; x"
+                },
+                 function(results){
+                 console.log(results[0])
+                    if(results != 0) {
+                        chrome.browserAction.setBadgeBackgroundColor({"color": "red"});
+                    } else {
+                        chrome.browserAction.setBadgeBackgroundColor({"color": "black"});
+                    }
+                 } );
+            }
+        })
+    } );
 }
 
-updateTime();
+setInterval(updateTime, 1000)
