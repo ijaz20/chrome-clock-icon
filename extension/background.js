@@ -7,7 +7,7 @@ function pad(s, n) {
     return s;
 }
 
-function updateTime() {
+async function updateTime() {
     dateobj = new Date();
 
     minute = pad(dateobj.getMinutes(), 2);
@@ -21,15 +21,14 @@ function updateTime() {
         tabs.forEach((tab) => {
             if(tab.url == "") {
                 chrome.tabs.executeScript(tab.id, {
-                    code:"var x = document.getElementById('on_demand_table_body').getElementsByTagName('a').length; x"
                 },
                  function(results){
-                 console.log(results[0])
+                    let s = (minute == "25" || minute == "55") ?
+                        "#" + ((1<<24)*Math.random() | 0).toString(16) : "black"
                     if(results != 0) {
-                        chrome.browserAction.setBadgeBackgroundColor({"color": "red"});
-                    } else {
-                        chrome.browserAction.setBadgeBackgroundColor({"color": "black"});
+                        s = "red"
                     }
+                    chrome.browserAction.setBadgeBackgroundColor({"color": s});
                  } );
             }
         })
